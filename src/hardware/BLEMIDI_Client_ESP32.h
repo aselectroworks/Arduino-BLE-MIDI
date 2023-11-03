@@ -228,6 +228,7 @@ private:
     BLERemoteCharacteristic *_characteristic = nullptr;
     BLERemoteService *pSvc = nullptr;
     bool firstTimeSend = true; //First writeValue get sends like Write with reponse for clean security flags. After first time, all messages are send like WriteNoResponse for increase transmision speed.
+    bool _firstTimeResponse = false; // surpress to wait First writeValue response
 
     BLEMIDI_Transport<class BLEMIDI_Client_ESP32> *_bleMidiTransport = nullptr;
 
@@ -247,7 +248,7 @@ public:
     {
     }
 
-    bool begin(const char *, BLEMIDI_Transport<class BLEMIDI_Client_ESP32> *);
+    bool begin(const char *, const bool, BLEMIDI_Transport<class BLEMIDI_Client_ESP32> *);
 
     bool end()
     {
@@ -268,7 +269,7 @@ public:
 
         if (firstTimeSend)
         {
-            _characteristic->writeValue(data, length, true);
+            _characteristic->writeValue(data, length, _firstTimeResponse);
             firstTimeSend = false;
             return;
         }
@@ -403,9 +404,11 @@ protected:
 ##########################################
 */
 
-bool BLEMIDI_Client_ESP32::begin(const char *deviceName, BLEMIDI_Transport<class BLEMIDI_Client_ESP32> *bleMidiTransport)
+bool BLEMIDI_Client_ESP32::begin(const char *deviceName, const bool firstTimeResponse, BLEMIDI_Transport<class BLEMIDI_Client_ESP32> *bleMidiTransport)
 {
     _bleMidiTransport = bleMidiTransport;
+
+    _firstTimeResponse = firstTimeResponse; 
 
     std::string strDeviceName(deviceName);
     if (strDeviceName == "") // Connect to the first midi server found

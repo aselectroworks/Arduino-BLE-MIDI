@@ -39,13 +39,17 @@ private:
 
     uint8_t mTimestampLow;
 
+    bool mFirstTimeResponse; 
+
 private:
     T mBleClass;
 
 public:
-    BLEMIDI_Transport(const char *deviceName)
+    BLEMIDI_Transport(const char *deviceName, const bool firstTimeResponse = true)
     {
         strncpy(mDeviceName, deviceName, sizeof(mDeviceName));
+
+        mFirstTimeResponse = firstTimeResponse; 
 
         mRxIndex = 0;
         mTxIndex = 0;
@@ -56,7 +60,7 @@ public:
 
     void begin()
     {
-        mBleClass.begin(mDeviceName, this);
+        mBleClass.begin(mDeviceName, mFirstTimeResponse, this);
     }
 
     void end()
