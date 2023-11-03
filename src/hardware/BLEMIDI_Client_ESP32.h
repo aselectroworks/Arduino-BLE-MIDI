@@ -189,8 +189,8 @@ protected:
     {
         if (enableConnection) //not begin() or end()
         {
-            Serial.print("Advertised Device found: ");
-            Serial.println(advertisedDevice->toString().c_str());
+            //Serial.print("Advertised Device found: ");
+            //Serial.println(advertisedDevice->toString().c_str());
             if (advertisedDevice->isAdvertisingService(NimBLEUUID(SERVICE_UUID)))
             {
                 Serial.println("Found MIDI Service");
